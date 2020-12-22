@@ -18,7 +18,7 @@ Yaguang Li, Rose Yu, Cyrus Shahabi, Yan Liu, [Diffusion Convolutional Recurrent 
 * tables
 * future
 
-Dependency can be installed using the following command:
+Dependency can be installed using the following command
 ```bash
 pip install -r requirements.txt
 ```
