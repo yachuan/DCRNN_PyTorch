@@ -159,8 +159,7 @@ class DCRNNSupervisor:
         wait = 0
         optimizer = torch.optim.Adam(self.dcrnn_model.parameters(), lr=base_lr, eps=epsilon)
 
-        lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=steps,
-                                                            gamma=lr_decay_ratio)
+        lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=steps, gamma=lr_decay_ratio)
 
         self._logger.info('Start training ...')
 

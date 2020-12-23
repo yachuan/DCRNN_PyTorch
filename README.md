@@ -78,6 +78,9 @@ python run_demo_pytorch.py --config_filename=data/model/pretrained/METR-LA/confi
 
 # PEMS-BAY
 python run_demo_pytorch.py --config_filename=data/model/pretrained/PEMS-BAY/config.yaml
+
+# environment ### 不缺定
+python run_demo_pytorch.py --config_filename=data/model/pretrained/environment/config.yaml
 ```
 The generated prediction of DCRNN is in `data/results/dcrnn_predictions`.
 
@@ -89,6 +92,10 @@ python dcrnn_train_pytorch.py --config_filename=data/model/dcrnn_la.yaml
 
 # PEMS-BAY
 python dcrnn_train_pytorch.py --config_filename=data/model/dcrnn_bay.yaml
+
+
+# environment
+python dcrnn_train_pytorch.py --config_filename=data/model/dcrnn_environment.yaml
 ```
 
 There is a chance that the training loss will explode, the temporary workaround is to restart from the last saved model before the explosion, or to decrease the learning rate earlier in the learning rate schedule. 

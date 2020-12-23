@@ -34,6 +34,7 @@ def get_adjacency_matrix(distance_df, sensor_ids, normalized_k=0.1):
     distances = dist_mx[~np.isinf(dist_mx)].flatten()
     std = distances.std()
     adj_mx = np.exp(-np.square(dist_mx / std))
+    print(adj_mx.shape)
     # Make the adjacent matrix symmetric by taking the max.
     # adj_mx = np.maximum.reduce([adj_mx, adj_mx.T])
 
