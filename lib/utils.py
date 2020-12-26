@@ -4,7 +4,7 @@ import os
 import pickle
 import scipy.sparse as sp
 import sys
-import tensorflow as tf
+#import tensorflow as tf
 
 from scipy.sparse import linalg
 
@@ -65,21 +65,21 @@ class StandardScaler:
         return (data * self.std) + self.mean
 
 
-def add_simple_summary(writer, names, values, global_step):
-    """
-    Writes summary for a list of scalars.
-    :param writer:
-    :param names:
-    :param values:
-    :param global_step:
-    :return:
-    """
-    for name, value in zip(names, values):
-        summary = tf.Summary()
-        summary_value = summary.value.add()
-        summary_value.simple_value = value
-        summary_value.tag = name
-        writer.add_summary(summary, global_step)
+# def add_simple_summary(writer, names, values, global_step):
+#     """
+#     Writes summary for a list of scalars.
+#     :param writer:
+#     :param names:
+#     :param values:
+#     :param global_step:
+#     :return:
+#     """
+#     for name, value in zip(names, values):
+#         summary = tf.Summary()
+#         summary_value = summary.value.add()
+#         summary_value.simple_value = value
+#         summary_value.tag = name
+#         writer.add_summary(summary, global_step)
 
 
 def calculate_normalized_laplacian(adj):
@@ -163,16 +163,16 @@ def get_logger(log_dir, name, log_filename='info.log', level=logging.INFO):
     return logger
 
 
-def get_total_trainable_parameter_size():
-    """
-    Calculates the total number of trainable parameters in the current graph.
-    :return:
-    """
-    total_parameters = 0
-    for variable in tf.trainable_variables():
-        # shape is an array of tf.Dimension
-        total_parameters += np.product([x.value for x in variable.get_shape()])
-    return total_parameters
+# def get_total_trainable_parameter_size():
+#     """
+#     Calculates the total number of trainable parameters in the current graph.
+#     :return:
+#     """
+#     total_parameters = 0
+#     for variable in tf.trainable_variables():
+#         # shape is an array of tf.Dimension
+#         total_parameters += np.product([x.value for x in variable.get_shape()])
+#     return total_parameters
 
 
 def load_dataset(dataset_dir, batch_size, test_batch_size=None, **kwargs):
