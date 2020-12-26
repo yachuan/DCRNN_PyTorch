@@ -23,7 +23,7 @@ class DCRNNSupervisor:
 
         # logging.
         self._log_dir = self._get_log_dir(kwargs)
-        self._writer = SummaryWriter('runs/' + self._log_dir)
+        #self._writer = SummaryWriter('runs/' + self._log_dir)
 
         log_level = self._kwargs.get('log_level', 'INFO')
         self._logger = utils.get_logger(self._log_dir, __name__, 'info.log', level=log_level)
@@ -136,7 +136,7 @@ class DCRNNSupervisor:
 
             mean_loss = np.mean(losses)
 
-            self._writer.add_scalar('{} loss'.format(dataset), mean_loss, batches_seen)
+            #self._writer.add_scalar('{} loss'.format(dataset), mean_loss, batches_seen)
 
             y_preds = np.concatenate(y_preds, axis=1)
             y_truths = np.concatenate(y_truths, axis=1)  # concatenate on batch dimension
@@ -214,9 +214,9 @@ class DCRNNSupervisor:
 
             end_time = time.time()
 
-            self._writer.add_scalar('training loss',
-                                    np.mean(losses),
-                                    batches_seen)
+            # self._writer.add_scalar('training loss',
+            #                         np.mean(losses),
+            #                         batches_seen)
 
             if (epoch_num % log_every) == log_every - 1:
                 message = 'Epoch [{}/{}] ({}) train_mae: {:.4f}, val_mae: {:.4f}, lr: {:.6f}, ' \
