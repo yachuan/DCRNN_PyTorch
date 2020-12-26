@@ -109,7 +109,7 @@ class DCGRUCell(torch.nn.Module):
     @staticmethod
     def _concat(x, x_):
         x_ = x_.unsqueeze(0)
-        return torch.cat([x, x_], dim=0)
+        return torch.cat([x.float(), x_.float()], dim=0)
 
     def _fc(self, inputs, state, output_size, bias_start=0.0):
         batch_size = inputs.shape[0]
