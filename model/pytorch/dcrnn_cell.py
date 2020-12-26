@@ -128,7 +128,7 @@ class DCGRUCell(torch.nn.Module):
         batch_size = inputs.shape[0]
         inputs = torch.reshape(inputs, (batch_size, self._num_nodes, -1))
         state = torch.reshape(state, (batch_size, self._num_nodes, -1))
-        inputs_and_state = torch.cat([inputs, state], dim=2)
+        inputs_and_state = torch.cat([inputs.float(), state.float()], dim=2)
         input_size = inputs_and_state.size(2)
 
         x = inputs_and_state
