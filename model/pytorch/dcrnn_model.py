@@ -138,7 +138,7 @@ class DCRNNModel(nn.Module, Seq2SeqAttrs):
 
         for t in range(self.decoder_model.horizon):
             decoder_output, decoder_hidden_state = self.decoder_model(decoder_input,
-                                                                      decoder_hidden_state)
+                                                                      decoder_hidden_state.float())
             decoder_input = decoder_output
             outputs.append(decoder_output)
             if self.training and self.use_curriculum_learning:

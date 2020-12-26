@@ -140,7 +140,7 @@ class DCGRUCell(torch.nn.Module):
             pass
         else:
             for support in self._supports:
-                x1 = torch.sparse.mm(support, x0)
+                x1 = torch.sparse.mm(support.double(), x0.double())
                 x = self._concat(x, x1)
 
                 for k in range(2, self._max_diffusion_step + 1):
@@ -154,7 +154,7 @@ class DCGRUCell(torch.nn.Module):
         x = torch.reshape(x, shape=[batch_size * self._num_nodes, input_size * num_matrices])
 
         weights = self._gconv_params.get_weights((input_size * num_matrices, output_size))
-        x = torch.matmul(x, weights)  # (batch_size * self._num_nodes, output_size)
+        x = torch.matmul(x.double(), weights.double())  # (batch_size * self._num_nodes, output_size)
 
         biases = self._gconv_params.get_biases(output_size, bias_start)
         x += biases
