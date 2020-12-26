@@ -182,10 +182,12 @@ class DCRNNSupervisor:
                 optimizer.zero_grad()
 
                 x, y = self._prepare_data(x, y)
+                print('x',x.shape)
+                print('y',y.shape)
+                print('batches_seen',batches_seen)
 
                 output = self.dcrnn_model(x, y, batches_seen)
-                if epoch_num/10 = 10:
-                    print('the output has size', output.shape)
+                print('the output has size', output.shape)
 
                 if batches_seen == 0:
                     # this is a workaround to accommodate dynamically registered parameters in DCGRUCell
