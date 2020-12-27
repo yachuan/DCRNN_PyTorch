@@ -3,11 +3,12 @@ import time
 
 import numpy as np
 import torch
+import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 
 from lib import utils
 from model.pytorch.dcrnn_model import DCRNNModel
-from model.pytorch.loss import masked_mae_loss
+#from model.pytorch.loss import masked_mae_loss, masked_rmse_loss, masked_mse_loss
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -48,6 +49,8 @@ class DCRNNSupervisor:
         self._epoch_num = self._train_kwargs.get('epoch', 0)
         if self._epoch_num > 0:
             self.load_model()
+        
+        self.criterion = nn.MSELoss()
 
     @staticmethod
     def _get_log_dir(kwargs):
@@ -128,7 +131,7 @@ class DCRNNSupervisor:
                 x, y = self._prepare_data(x, y)
 
                 output = self.dcrnn_model(x)
-                loss = self._compute_loss(y, output)
+                loss = self._compute_loss(y[-1,:,:], output)
                 losses.append(loss.item())
 
                 y_truths.append(y.cpu())
@@ -158,6 +161,7 @@ class DCRNNSupervisor:
         min_val_loss = float('inf')
         wait = 0
         optimizer = torch.optim.Adam(self.dcrnn_model.parameters(), lr=base_lr, eps=epsilon)
+        
 
         lr_scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=steps, gamma=lr_decay_ratio)
 
@@ -203,7 +207,7 @@ class DCRNNSupervisor:
                 loss.backward()
 
                 # gradient clipping - this does it in place
-                torch.nn.utils.clip_grad_norm_(self.dcrnn_model.parameters(), self.max_grad_norm)
+                nn.utils.clip_grad_norm_(self.dcrnn_model.parameters(), self.max_grad_norm)
 
                 optimizer.step()
             self._logger.info("epoch complete")
@@ -219,7 +223,7 @@ class DCRNNSupervisor:
                                     batches_seen)
 
             if (epoch_num % log_every) == log_every - 1:
-                message = 'Epoch [{}/{}] ({}) train_mae: {:.4f}, val_mae: {:.4f}, lr: {:.6f}, ' \
+                message = 'Epoch [{}/{}] ({}) train_rmse: {:.4f}, val_rmse: {:.4f}, lr: {:.6f}, ' \
                           '{:.1f}s'.format(epoch_num, epochs, batches_seen,
                                            np.mean(losses), val_loss, lr_scheduler.get_lr()[0],
                                            (end_time - start_time))
@@ -227,7 +231,7 @@ class DCRNNSupervisor:
 
             if (epoch_num % test_every_n_epochs) == test_every_n_epochs - 1:
                 test_loss, _ = self.evaluate(dataset='test', batches_seen=batches_seen)
-                message = 'Epoch [{}/{}] ({}) train_mae: {:.4f}, test_mae: {:.4f},  lr: {:.6f}, ' \
+                message = 'Epoch [{}/{}] ({}) train_rmse: {:.4f}, test_tmse: {:.4f},  lr: {:.6f}, ' \
                           '{:.1f}s'.format(epoch_num, epochs, batches_seen,
                                            np.mean(losses), test_loss, lr_scheduler.get_lr()[0],
                                            (end_time - start_time))
@@ -284,4 +288,4 @@ class DCRNNSupervisor:
     def _compute_loss(self, y_true, y_predicted):
         y_true = self.standard_scaler.inverse_transform(y_true)
         y_predicted = self.standard_scaler.inverse_transform(y_predicted)
-        return masked_mae_loss(y_predicted, y_true)
+        return torch.sqrt(self.criterion(y_predicted, y_true))

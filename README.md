@@ -136,4 +136,5 @@ The normalization process is done after train-test split, and both x and y are n
 From the predicted y shape (24,bs, n_nodes), we can see the model gives prediction to the whole horizon, and we only want the last one. Thus, change the model to predict only the last one. 
 
 ## The loss using:
-Now masked mae loss is in use. I will  add  rmse, mse, mae. 
+Now masked mae loss is in use. 
+I changed the criterion to rmse loss. 
