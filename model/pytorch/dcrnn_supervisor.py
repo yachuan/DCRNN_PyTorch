@@ -193,7 +193,7 @@ class DCRNNSupervisor:
                     # this is a workaround to accommodate dynamically registered parameters in DCGRUCell
                     optimizer = torch.optim.Adam(self.dcrnn_model.parameters(), lr=base_lr, eps=epsilon)
 
-                loss = self._compute_loss(y, output)
+                loss = self._compute_loss(y[-1,:,:], output)
 
                 self._logger.debug(loss.item())
 

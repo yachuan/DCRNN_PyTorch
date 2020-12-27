@@ -164,4 +164,4 @@ class DCRNNModel(nn.Module, Seq2SeqAttrs):
             self._logger.info(
                 "Total trainable parameters {}".format(count_parameters(self))
             )
-        return outputs
+        return outputs[-1,:,:]

@@ -128,3 +128,12 @@ If you find this repository, e.g., the code and the datasets, useful in your res
   year={2018}
 }
 ```
+# Clarification
+## Normalization
+The normalization process is done after train-test split, and both x and y are normalized. Then the loss is calculated after the inverse transformation.
+
+## Which y is predicting?
+From the predicted y shape (24,bs, n_nodes), we can see the model gives prediction to the whole horizon, and we only want the last one. Thus, change the model to predict only the last one. 
+
+## The loss using:
+Now masked mae loss is in use. I will  add  rmse, mse, mae. 
