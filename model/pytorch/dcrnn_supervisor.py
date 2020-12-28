@@ -188,7 +188,8 @@ class DCRNNSupervisor:
                 x, y = self._prepare_data(x, y)
                 # print('x',x.shape)
                 # print('y',y.shape)
-                print('batches_seen',batches_seen)
+                if batches_seen%100 ==0:
+                    print('batches_seen',batches_seen)
 
                 output = self.dcrnn_model(x, y, batches_seen)
                 #print('the output has size', output.shape)
@@ -229,13 +230,13 @@ class DCRNNSupervisor:
                                            (end_time - start_time))
                 self._logger.info(message)
 
-            if (epoch_num % test_every_n_epochs) == test_every_n_epochs - 1:
-                test_loss, _ = self.evaluate(dataset='test', batches_seen=batches_seen)
-                message = 'Epoch [{}/{}] ({}) train_rmse: {:.4f}, test_tmse: {:.4f},  lr: {:.6f}, ' \
+            
+            test_loss, _ = self.evaluate(dataset='test', batches_seen=batches_seen)
+            message = 'Epoch [{}/{}] ({}) train_rmse: {:.4f}, test_tmse: {:.4f},  lr: {:.6f}, ' \
                           '{:.1f}s'.format(epoch_num, epochs, batches_seen,
                                            np.mean(losses), test_loss, lr_scheduler.get_lr()[0],
                                            (end_time - start_time))
-                self._logger.info(message)
+            self._logger.info(message)
 
             if val_loss < min_val_loss:
                 wait = 0
