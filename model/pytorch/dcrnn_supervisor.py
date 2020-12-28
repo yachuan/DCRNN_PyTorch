@@ -156,7 +156,7 @@ class DCRNNSupervisor:
 
     def _train(self, base_lr,
                steps, patience=50, epochs=100, lr_decay_ratio=0.1, log_every=1, save_model=1,
-               test_every_n_epochs=10, epsilon=1e-8, **kwargs):
+               test_every_n_epochs=1, epsilon=1e-8, **kwargs):
         # steps is used in learning rate - will see if need to use it?
         min_val_loss = float('inf')
         wait = 0
@@ -186,12 +186,12 @@ class DCRNNSupervisor:
                 optimizer.zero_grad()
 
                 x, y = self._prepare_data(x, y)
-                print('x',x.shape)
-                print('y',y.shape)
+                # print('x',x.shape)
+                # print('y',y.shape)
                 print('batches_seen',batches_seen)
 
                 output = self.dcrnn_model(x, y, batches_seen)
-                print('the output has size', output.shape)
+                #print('the output has size', output.shape)
 
                 if batches_seen == 0:
                     # this is a workaround to accommodate dynamically registered parameters in DCGRUCell
