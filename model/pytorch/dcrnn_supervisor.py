@@ -14,7 +14,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class DCRNNSupervisor:
-    def __init__(self, adj_mx, **kwargs):
+    def __init__(self, _type, adj_mx, **kwargs):
         self._kwargs = kwargs
         self._data_kwargs = kwargs.get('data')
         self._model_kwargs = kwargs.get('model')
@@ -30,7 +30,8 @@ class DCRNNSupervisor:
         self._logger = utils.get_logger(self._log_dir, __name__, 'info.log', level=log_level)
 
         # data set
-        self._data = utils.load_dataset(**self._data_kwargs)
+        
+        self._data = utils.load_dataset(_type, **self._data_kwargs)
         self.standard_scaler = self._data['scaler']
 
         self.num_nodes = int(self._model_kwargs.get('num_nodes', 1))
