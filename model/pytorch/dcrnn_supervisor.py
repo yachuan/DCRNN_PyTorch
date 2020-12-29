@@ -14,7 +14,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 class DCRNNSupervisor:
-    def __init__(self, _type, adj_mx, **kwargs):
+    def __init__(self, _type, _tval,  adj_mx, **kwargs):
         self._kwargs = kwargs
         self._data_kwargs = kwargs.get('data')
         self._model_kwargs = kwargs.get('model')
@@ -30,8 +30,8 @@ class DCRNNSupervisor:
         self._logger = utils.get_logger(self._log_dir, __name__, 'info.log', level=log_level)
 
         # data set
-        
-        self._data = utils.load_dataset(_type, **self._data_kwargs)
+        self._tval = _tval
+        self._data = utils.load_dataset(_type, self._tval, **self._data_kwargs)
         self.standard_scaler = self._data['scaler']
 
         self.num_nodes = int(self._model_kwargs.get('num_nodes', 1))
@@ -235,6 +235,15 @@ class DCRNNSupervisor:
                                            np.mean(losses), test_loss, lr_scheduler.get_lr()[0],
                                            (end_time - start_time))
             self._logger.info(message)
+
+            if self._tval == True:
+                test_loss, _ = self.evaluate(dataset='test2', batches_seen=batches_seen)
+                message = 'Epoch [{}/{}] ({}) train2_rmse: {:.4f}, test2_tmse: {:.4f},  lr: {:.6f}, ' \
+                            '{:.1f}s'.format(epoch_num, epochs, batches_seen,
+                                            np.mean(losses), test_loss, lr_scheduler.get_lr()[0],
+                                            (end_time - start_time))
+                self._logger.info(message)
+
 
             if val_loss < min_val_loss:
                 wait = 0

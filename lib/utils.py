@@ -175,22 +175,45 @@ def get_logger(log_dir, name, log_filename='info.log', level=logging.INFO):
 #     return total_parameters
 
 
-def load_dataset(type, dataset_dir, batch_size, test_batch_size=None, **kwargs):
+def load_dataset(type, tval, dataset_dir, batch_size, test_batch_size=None, **kwargs):
     print('the data is split by', type)
-    data = {}
-    for category in ['train', 'val', 'test']:
-        cat_data = np.load(os.path.join(os.path.join(dataset_dir, type), category + '.npz'))
-        data['x_' + category] = cat_data['x']
-        data['y_' + category] = cat_data['y']
-    scaler = StandardScaler(mean=data['x_train'][..., 0].mean(), std=data['x_train'][..., 0].std())
-    # Data format
-    for category in ['train', 'val', 'test']:
-        data['x_' + category][..., 0] = scaler.transform(data['x_' + category][..., 0])
-        data['y_' + category][..., 0] = scaler.transform(data['y_' + category][..., 0])
-    data['train_loader'] = DataLoader(data['x_train'], data['y_train'], batch_size, shuffle=True)
-    data['val_loader'] = DataLoader(data['x_val'], data['y_val'], test_batch_size, shuffle=False)
-    data['test_loader'] = DataLoader(data['x_test'], data['y_test'], test_batch_size, shuffle=False)
-    data['scaler'] = scaler
+    
+    if tval == True:
+        print("the data has tval")
+        data = {}
+        for category in ['train', 'val', 'test','test2']:
+
+            cat_data = np.load(os.path.join(os.path.join(os.path.join(dataset_dir, type),'tval'), category + '.npz'))
+            data['x_' + category] = cat_data['x']
+            data['y_' + category] = cat_data['y']
+        scaler = StandardScaler(mean=data['x_train'][..., 0].mean(), std=data['x_train'][..., 0].std())
+        # Data format
+        for category in ['train', 'val', 'test','test2']:
+            data['x_' + category][..., 0] = scaler.transform(data['x_' + category][..., 0])
+            data['y_' + category][..., 0] = scaler.transform(data['y_' + category][..., 0])
+        data['train_loader'] = DataLoader(data['x_train'], data['y_train'], batch_size, shuffle=True)
+        data['val_loader'] = DataLoader(data['x_val'], data['y_val'], test_batch_size, shuffle=False)
+        data['test_loader'] = DataLoader(data['x_test'], data['y_test'], test_batch_size, shuffle=False)
+        data['test2_loader'] = DataLoader(data['x_test2'], data['y_test2'], test_batch_size, shuffle=False)
+        data['scaler'] = scaler
+    else:
+        print("the data does not have tval")
+        data = {}
+        for category in ['train', 'val', 'test']:
+            cat_data = np.load(os.path.join(os.path.join(dataset_dir, type), category + '.npz'))
+            data['x_' + category] = cat_data['x']
+            data['y_' + category] = cat_data['y']
+        scaler = StandardScaler(mean=data['x_train'][..., 0].mean(), std=data['x_train'][..., 0].std())
+        # Data format
+        for category in ['train', 'val', 'test']:
+            data['x_' + category][..., 0] = scaler.transform(data['x_' + category][..., 0])
+            data['y_' + category][..., 0] = scaler.transform(data['y_' + category][..., 0])
+        data['train_loader'] = DataLoader(data['x_train'], data['y_train'], batch_size, shuffle=True)
+        data['val_loader'] = DataLoader(data['x_val'], data['y_val'], test_batch_size, shuffle=False)
+        data['test_loader'] = DataLoader(data['x_test'], data['y_test'], test_batch_size, shuffle=False)
+        data['scaler'] = scaler
+
+        
 
     return data
 
