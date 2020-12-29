@@ -25,5 +25,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config_filename', default=None, type=str, help='Configuration filename for restoring the model.')
     parser.add_argument('--use_cpu_only', default=False, type=bool, help='Set to true to only use cpu.')
+    #parser.add_argument('--split',defaul = 'time',type= str, help = 'The data is split by time or random')
     args = parser.parse_args()
     main(args)

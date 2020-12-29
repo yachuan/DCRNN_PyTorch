@@ -193,15 +193,12 @@ class DCRNNSupervisor:
 
                 output = self.dcrnn_model(x, y, batches_seen)
                 #print('the output has size', output.shape)
-
-                if batches_seen == 0:
-                    # this is a workaround to accommodate dynamically registered parameters in DCGRUCell
+                if batches_seen == 0:# this is a workaround to accommodate dynamically registered parameters in DCGRUCell
                     optimizer = torch.optim.Adam(self.dcrnn_model.parameters(), lr=base_lr, eps=epsilon)
 
                 loss = self._compute_loss(y[-1,:,:], output)
 
                 self._logger.debug(loss.item())
-
                 losses.append(loss.item())
 
                 batches_seen += 1

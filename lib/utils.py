@@ -175,10 +175,11 @@ def get_logger(log_dir, name, log_filename='info.log', level=logging.INFO):
 #     return total_parameters
 
 
-def load_dataset(dataset_dir, batch_size, test_batch_size=None, **kwargs):
+def load_dataset(type, dataset_dir, batch_size, test_batch_size=None, **kwargs):
+    print('the data is split by', type)
     data = {}
     for category in ['train', 'val', 'test']:
-        cat_data = np.load(os.path.join(dataset_dir, category + '.npz'))
+        cat_data = np.load(os.path.join(os.path.join(dataset_dir, type), category + '.npz'))
         data['x_' + category] = cat_data['x']
         data['y_' + category] = cat_data['y']
     scaler = StandardScaler(mean=data['x_train'][..., 0].mean(), std=data['x_train'][..., 0].std())
